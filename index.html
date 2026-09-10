@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEWSDESK — Active Voice Drill for Broadcast Writers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0c0c0c;
+    --paper: #f4f1ea;
+    --paper-2: #ebe6db;
+    --red: #c8201f;
+    --red-dark: #8c1110;
+    --ok: #1f6b3a;
+    --warn: #b8741a;
+    --rule: #1a1a1a;
+    --muted: #5a564d;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter Tight', sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(rgba(0,0,0,0.04) 1px, transparent 1px);
+    background-size: 3px 3px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .container {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 28px 32px 80px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Top bar */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .topbar .live {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--red);
+    font-weight: 500;
+  }
+  .topbar .dot {
+    width: 8px; height: 8px;
+    background: var(--red);
+    border-radius: 50%;
+    animation: pulse 1.4s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.25; }
+  }
+
+  /* Masthead */
+  .masthead {
+    padding: 32px 0 20px;
+    border-bottom: 6px double var(--ink);
+    margin-bottom: 28px;
+  }
+  .masthead .kicker {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 12px;
+  }
+  .masthead h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: clamp(48px, 7vw, 84px);
+    line-height: 0.92;
+    margin: 0 0 14px;
+    letter-spacing: -0.02em;
+  }
+  .masthead h1 em {
+    font-style: italic;
+    color: var(--red);
+    font-weight: 700;
+  }
+  .masthead .standfirst {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--muted);
+    max-width: 680px;
+    line-height: 1.4;
+  }
+
+  /* Sections */
+  .section {
+    margin: 36px 0;
+  }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 8px;
+  }
+  .section-head .num {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 4px 8px;
+    letter-spacing: 0.15em;
+  }
+  .section-head h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 28px;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .section-head .meta {
+    margin-left: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+  }
+
+  /* Briefing card */
+  .briefing {
+    background: var(--paper-2);
+    border-left: 4px solid var(--red);
+    padding: 20px 24px;
+    margin-bottom: 24px;
+  }
+  .briefing p { margin: 0 0 10px; }
+  .briefing p:last-child { margin-bottom: 0; }
+  .briefing strong { font-weight: 600; }
+  .briefing .formula {
+    font-family: 'DM Mono', monospace;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 12px 16px;
+    margin: 14px 0 4px;
+    font-size: 14px;
+  }
+  .briefing .formula .red { color: #ff6b6a; }
+
+  /* Comparison block */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--ink);
+    margin: 18px 0;
+  }
+  .compare > div {
+    padding: 16px 20px;
+  }
+  .compare .bad {
+    border-right: 1px solid var(--ink);
+    background: rgba(200, 32, 31, 0.06);
+  }
+  .compare .good {
+    background: rgba(31, 107, 58, 0.06);
+  }
+  .compare .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .compare .bad .label { color: var(--red-dark); }
+  .compare .good .label { color: var(--ok); }
+  .compare .sentence {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    line-height: 1.4;
+  }
+
+  /* Drill items */
+  .drill {
+    border: 1px solid var(--ink);
+    background: #fff;
+    padding: 22px 24px;
+    margin-bottom: 18px;
+    position: relative;
+  }
+  .drill-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed rgba(0,0,0,0.2);
+  }
+  .drill-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3px 7px;
+    letter-spacing: 0.12em;
+  }
+  .drill-slug {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .drill-status {
+    margin-left: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border: 1px solid var(--muted);
+    color: var(--muted);
+  }
+  .drill-status.ok {
+    border-color: var(--ok);
+    color: var(--ok);
+    background: rgba(31,107,58,0.08);
+  }
+  .drill-status.bad {
+    border-color: var(--red);
+    color: var(--red);
+    background: rgba(200,32,31,0.08);
+  }
+
+  .passive-line {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    line-height: 1.45;
+    margin: 6px 0 14px;
+  }
+  .passive-line::before {
+    content: "▸ PASSIVE ";
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--red);
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  .hint {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    letter-spacing: 0.05em;
+  }
+  .hint b {
+    color: var(--ink);
+    background: rgba(200,32,31,0.1);
+    padding: 1px 5px;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 64px;
+    padding: 12px 14px;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    resize: vertical;
+    outline: none;
+    transition: background 0.15s;
+  }
+  textarea:focus {
+    background: #fff;
+    border-color: var(--red);
+  }
+
+  .drill-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  button {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  button:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  button.primary {
+    background: var(--red);
+    border-color: var(--red);
+    color: #fff;
+  }
+  button.primary:hover {
+    background: var(--red-dark);
+    border-color: var(--red-dark);
+  }
+  button.ghost {
+    border-color: var(--muted);
+    color: var(--muted);
+  }
+
+  .feedback {
+    margin-top: 14px;
+    padding: 14px 16px;
+    font-size: 14px;
+    line-height: 1.5;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.ok {
+    background: rgba(31,107,58,0.08);
+    border-left: 3px solid var(--ok);
+  }
+  .feedback.bad {
+    background: rgba(200,32,31,0.06);
+    border-left: 3px solid var(--red);
+  }
+  .feedback .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .feedback.ok .label { color: var(--ok); }
+  .feedback.bad .label { color: var(--red-dark); }
+  .model-answer {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-style: italic;
+    margin: 4px 0 8px;
+  }
+  .note {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* Score panel */
+  .scoreboard {
+    position: sticky;
+    top: 12px;
+    z-index: 5;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 14px 22px;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .scoreboard .ticker {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #ff6b6a;
+  }
+  .scoreboard .score-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+  }
+  .scoreboard .progress {
+    flex: 1;
+    min-width: 140px;
+    height: 6px;
+    background: rgba(255,255,255,0.15);
+    overflow: hidden;
+    position: relative;
+  }
+  .scoreboard .progress-bar {
+    height: 100%;
+    background: var(--red);
+    width: 0;
+    transition: width 0.4s ease;
+  }
+  .scoreboard .small {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    opacity: 0.7;
+  }
+
+  /* Final task */
+  .final {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 28px 30px;
+    margin-top: 40px;
+    position: relative;
+  }
+  .final::before {
+    content: "FINAL ASSIGNMENT // ON-AIR COPY";
+    position: absolute;
+    top: -10px;
+    left: 24px;
+    background: var(--red);
+    color: #fff;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    padding: 4px 10px;
+  }
+  .final h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    margin: 10px 0 12px;
+    font-weight: 700;
+  }
+  .final p { line-height: 1.6; }
+  .final .wire {
+    background: var(--paper);
+    color: var(--ink);
+    padding: 18px 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    line-height: 1.55;
+    margin: 16px 0;
+    white-space: pre-line;
+  }
+  .final .wire .head {
+    font-weight: 500;
+    color: var(--red);
+    margin-bottom: 6px;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+  }
+  .final textarea {
+    background: var(--paper);
+    border-color: var(--paper);
+    min-height: 140px;
+  }
+  .final button {
+    background: var(--red);
+    color: #fff;
+    border-color: var(--red);
+  }
+  .final button:hover {
+    background: #fff;
+    color: var(--ink);
+    border-color: #fff;
+  }
+
+  /* Tip cards */
+  .tip-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+    margin: 16px 0;
+  }
+  .tip {
+    border: 1px solid var(--ink);
+    padding: 14px 16px;
+    background: var(--paper-2);
+  }
+  .tip .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--red);
+    margin-bottom: 6px;
+  }
+  .tip h4 {
+    font-family: 'Playfair Display', serif;
+    margin: 0 0 6px;
+    font-size: 17px;
+  }
+  .tip p { font-size: 14px; margin: 0; color: var(--muted); }
+
+  /* Footer */
+  footer {
+    margin-top: 60px;
+    padding-top: 18px;
+    border-top: 1px solid var(--ink);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  @media (max-width: 640px) {
+    .container { padding: 18px 18px 60px; }
+    .compare { grid-template-columns: 1fr; }
+    .compare .bad { border-right: none; border-bottom: 1px solid var(--ink); }
+    .section-head { flex-wrap: wrap; }
+    .section-head .meta { width: 100%; margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="topbar">
+    <div><span class="live"><span class="dot"></span>ON AIR</span> &nbsp;//&nbsp; CH-04 NEWSDESK</div>
+    <div id="clock">--:--:--</div>
+  </div>
+
+  <header class="masthead">
+    <div class="kicker">Writing Lab · For L2 Broadcast Journalism Students</div>
+    <h1>Cut the <em>Passive.</em><br>Make the News Move.</h1>
+    <p class="standfirst">TV scripts live or die in the first three seconds. This drill turns slow, agent-buried passive sentences into the tight, active copy a viewer can hear and follow.</p>
+  </header>
+
+  <div class="scoreboard">
+    <span class="ticker">▸ Editor's Desk</span>
+    <span class="score-num" id="scoreText">0 / 8</span>
+    <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+    <span class="small" id="statusText">Awaiting first rewrite…</span>
+  </div>
+
+  <!-- BRIEFING -->
+  <section class="section">
+    <div class="section-head">
+      <span class="num">01</span>
+      <h2>The Newsroom Briefing</h2>
+      <span class="meta">Read first · 2 min</span>
+    </div>
+
+    <div class="briefing">
+      <p>Broadcast news has one job: tell the viewer <strong>who did what</strong>, fast. The passive voice gets in the way. It hides the doer, pushes the verb back, and makes scripts harder to read aloud.</p>
+      <p>Compare:</p>
+      <div class="formula">
+        PASSIVE  →  <span class="red">Three suspects were arrested by police in Manila last night.</span><br>
+        ACTIVE   →  Police arrested three suspects in Manila last night.
+      </div>
+      <p>The active version is shorter, faster, and tells the anchor where to put their breath. <strong>Active voice = shorter sentences + stronger verbs + clear actor.</strong></p>
+    </div>
+
+    <div class="compare">
+      <div class="bad">
+        <div class="label">▸ Don't write</div>
+        <div class="sentence">"A new climate policy has been announced by the government this morning."</div>
+      </div>
+      <div class="good">
+        <div class="label">▸ Write instead</div>
+        <div class="sentence">"The government announced a new climate policy this morning."</div>
+      </div>
+    </div>
+
+    <div class="tip-grid">
+      <div class="tip">
+        <div class="tag">RULE 01</div>
+        <h4>Find the doer first</h4>
+        <p>Ask: <em>who did this?</em> Put that person or group at the start of the sentence.</p>
+      </div>
+      <div class="tip">
+        <div class="tag">RULE 02</div>
+        <h4>Use present or simple past</h4>
+        <p>TV news prefers "<em>police arrest</em>" or "<em>police arrested</em>" — not "have been arrested."</p>
+      </div>
+      <div class="tip">
+        <div class="tag">RULE 03</div>
+        <h4>Keep it under 20 words</h4>
+        <p>One idea per sentence. The anchor needs air. The viewer needs time to follow.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- DRILLS -->
+  <section class="section">
+    <div class="section-head">
+      <span class="num">02</span>
+      <h2>The Rewrite Drill</h2>
+      <span class="meta">8 wire stories · rewrite each</span>
+    </div>
+
+    <p style="color: var(--muted); margin-top: -8px;">
+      Each item below is a passive sentence from a fictional news wire. Rewrite it in <strong>active voice</strong> as it would appear in a TV news script. Type your version, then tap <em>Check</em>. The system looks for an active subject + verb pattern. Use the hint if you need it.
+    </p>
+
+    <div id="drills"></div>
+  </section>
+
+  <!-- FINAL -->
+  <section class="section">
+    <div class="section-head">
+      <span class="num">03</span>
+      <h2>On-Air Assignment</h2>
+      <span class="meta">Free-write · 60 seconds</span>
+    </div>
+
+    <div class="final">
+      <h3>Write the opening 30 seconds of the 6 PM bulletin.</h3>
+      <p>You are the writer on duty. The wire copy below is full of passive constructions. Rewrite it as a short, active, broadcast-ready script for the anchor to read on camera. Aim for 4–6 short sentences.</p>
+
+      <div class="wire">
+<span class="head">// WIRE COPY — RAW</span>A fire was reported in a textile factory in the Mong Kok district at around 4 AM this morning. The blaze was brought under control by more than fifty firefighters after three hours. Twelve workers were rescued from the upper floors. No casualties have been confirmed by the authorities. An investigation has been launched, and the cause of the fire is being examined by inspectors.
+      </div>
+
+      <textarea id="finalScript" placeholder="ANCHOR (on cam):&#10;A fire broke out at a Mong Kok textile factory early this morning…"></textarea>
+      <div class="drill-actions" style="margin-top: 14px;">
+        <button class="primary" onclick="analyzeFinal()">Submit to Editor</button>
+        <button class="ghost" onclick="document.getElementById('finalScript').value=''; document.getElementById('finalFeedback').classList.remove('show');">Clear</button>
+      </div>
+      <div id="finalFeedback" class="feedback" style="background: var(--paper); color: var(--ink);"></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>NEWSDESK WRITING LAB · ED.04</span>
+    <span>For L2 learners · CEFR B1–B2</span>
+    <span id="footerDate"></span>
+  </footer>
+</div>
+
+<script>
+  // -------- DRILL DATA --------
+  const drills = [
+    {
+      slug: "POLITICS · CABINET",
+      passive: "A new education bill was passed by the parliament yesterday afternoon.",
+      hint: "Doer = <b>parliament</b>. Verb = <b>passed</b>. Drop 'was … by'.",
+      subjects: ["parliament", "the parliament"],
+      verbs: ["passed", "passes"],
+      forbidden: ["was passed", "were passed", "was passed by", "has been passed"],
+      model: "Parliament passed a new education bill yesterday afternoon."
+    },
+    {
+      slug: "CRIME · CITY DESK",
+      passive: "Two suspects have been arrested by the police in connection with the bank robbery.",
+      hint: "Doer = <b>police</b>. Move them to the front. Use simple past.",
+      subjects: ["police", "the police"],
+      verbs: ["arrested", "have arrested"],
+      forbidden: ["have been arrested", "were arrested by", "has been arrested"],
+      model: "Police arrested two suspects in connection with the bank robbery."
+    },
+    {
+      slug: "ECONOMY · MARKETS",
+      passive: "Interest rates were raised by the central bank for the third time this year.",
+      hint: "Doer = <b>the central bank</b>. Start there.",
+      subjects: ["the central bank", "central bank"],
+      verbs: ["raised", "raises", "has raised"],
+      forbidden: ["were raised", "was raised by", "have been raised"],
+      model: "The central bank raised interest rates for the third time this year."
+    },
+    {
+      slug: "WEATHER · NATIONAL",
+      passive: "A severe storm warning has been issued by the weather bureau for the southern coast.",
+      hint: "Doer = <b>the weather bureau</b>. Active verb = <b>issued</b>.",
+      subjects: ["the weather bureau", "weather bureau"],
+      verbs: ["issued", "has issued", "issues"],
+      forbidden: ["has been issued", "was issued by", "have been issued"],
+      model: "The weather bureau has issued a severe storm warning for the southern coast."
+    },
+    {
+      slug: "HEALTH · WHO",
+      passive: "The new vaccine is being tested by researchers at three universities.",
+      hint: "Doer = <b>researchers</b>. Use present continuous active or simple present.",
+      subjects: ["researchers", "the researchers", "scientists"],
+      verbs: ["are testing", "test"],
+      forbidden: ["is being tested", "being tested by"],
+      model: "Researchers at three universities are testing the new vaccine."
+    },
+    {
+      slug: "SPORT · LATE EDIT",
+      passive: "The championship trophy was won by the home team in extra time.",
+      hint: "Doer = <b>the home team</b>. Active verb = <b>won</b>.",
+      subjects: ["the home team", "home team"],
+      verbs: ["won", "have won"],
+      forbidden: ["was won by", "were won by", "has been won"],
+      model: "The home team won the championship trophy in extra time."
+    },
+    {
+      slug: "TECH · BREAKING",
+      passive: "A major data breach has been confirmed by company executives this evening.",
+      hint: "Doer = <b>company executives</b>. Use 'confirm' or 'confirmed'.",
+      subjects: ["company executives", "executives", "the executives"],
+      verbs: ["confirmed", "have confirmed"],
+      forbidden: ["has been confirmed", "was confirmed by", "have been confirmed"],
+      model: "Company executives have confirmed a major data breach this evening."
+    },
+    {
+      slug: "WORLD · DIPLOMACY",
+      passive: "A peace agreement was signed by the two leaders during talks in Geneva.",
+      hint: "Doer = <b>the two leaders</b>. Active verb = <b>signed</b>.",
+      subjects: ["the two leaders", "two leaders", "both leaders"],
+      verbs: ["signed", "have signed"],
+      forbidden: ["was signed by", "were signed by", "has been signed"],
+      model: "The two leaders signed a peace agreement during talks in Geneva."
+    }
+  ];
+
+  // -------- BUILD DRILLS --------
+  const drillsContainer = document.getElementById("drills");
+  drills.forEach((d, i) => {
+    const div = document.createElement("div");
+    div.className = "drill";
+    div.id = `drill-${i}`;
+    div.innerHTML = `
+      <div class="drill-head">
+        <span class="drill-num">${String(i+1).padStart(2,'0')}</span>
+        <span class="drill-slug">${d.slug}</span>
+        <span class="drill-status" id="status-${i}">Pending</span>
+      </div>
+      <div class="passive-line">${d.passive}</div>
+      <div class="hint">HINT · ${d.hint}</div>
+      <textarea id="ans-${i}" placeholder="Rewrite in active voice…"></textarea>
+      <div class="drill-actions">
+        <button class="primary" onclick="checkDrill(${i})">Check</button>
+        <button onclick="showModel(${i})">Show Model</button>
+        <button class="ghost" onclick="document.getElementById('ans-${i}').value=''; document.getElementById('fb-${i}').classList.remove('show'); resetStatus(${i});">Reset</button>
+      </div>
+      <div id="fb-${i}" class="feedback"></div>
+    `;
+    drillsContainer.appendChild(div);
+  });
+
+  // -------- LOGIC --------
+  const completed = new Set();
+
+  function normalize(s) {
+    return s.toLowerCase().replace(/[^a-z0-9\s']/g, " ").replace(/\s+/g, " ").trim();
+  }
+
+  function checkDrill(i) {
+    const d = drills[i];
+    const raw = document.getElementById(`ans-${i}`).value;
+    const txt = normalize(raw);
+    const fb = document.getElementById(`fb-${i}`);
+    const statusEl = document.getElementById(`status-${i}`);
+
+    if (!txt) {
+      fb.className = "feedback show bad";
+      fb.innerHTML = `<span class="label">▸ Empty</span>Write your active-voice version first, then tap Check.`;
+      return;
+    }
+
+    // Detect any forbidden passive marker
+    const passiveHit = d.forbidden.find(p => txt.includes(p));
+    if (passiveHit) {
+      fb.className = "feedback show bad";
+      statusEl.className = "drill-status bad";
+      statusEl.textContent = "Still Passive";
+      fb.innerHTML = `<span class="label">▸ Still passive</span>
+        Your sentence still contains "<b>${passiveHit}</b>" — that's a passive construction. Try moving the doer to the front and using a simple active verb.<br>
+        <span class="note">Compare: <em>${d.model}</em></span>`;
+      completed.delete(i);
+      updateScore();
+      return;
+    }
+
+    // Generic 'be + past participle' detector as a safety net
+    const passiveGeneric = /\b(am|is|are|was|were|be|been|being)\s+\w+ed\b/.test(txt);
+    if (passiveGeneric && !d.subjects.some(s => txt.startsWith(s))) {
+      fb.className = "feedback show bad";
+      statusEl.className = "drill-status bad";
+      statusEl.textContent = "Check Voice";
+      fb.innerHTML = `<span class="label">▸ Looks passive</span>
+        Your sentence still looks passive ("be" verb + past participle). Put the doer at the start.<br>
+        <span class="note">Try starting with: <b>${d.subjects[0]}</b> …</span>`;
+      completed.delete(i);
+      updateScore();
+      return;
+    }
+
+    // Check for correct subject + active verb
+    const hasSubject = d.subjects.some(s => txt.includes(s));
+    const hasVerb = d.verbs.some(v => txt.includes(v));
+
+    if (hasSubject && hasVerb) {
+      fb.className = "feedback show ok";
+      statusEl.className = "drill-status ok";
+      statusEl.textContent = "✓ Filed";
+      fb.innerHTML = `<span class="label">▸ Cleared for air</span>
+        Strong rewrite. The doer is up front and the verb is doing the work.<br>
+        <div class="model-answer">Editor's version: ${d.model}</div>
+        <span class="note">Your version is broadcast-ready as long as it stays under ~20 words.</span>`;
+      completed.add(i);
+      updateScore();
+    } else if (!hasSubject) {
+      fb.className = "feedback show bad";
+      statusEl.className = "drill-status bad";
+      statusEl.textContent = "Wrong Doer";
+      fb.innerHTML = `<span class="label">▸ Missing the doer</span>
+        Your sentence is missing the actor. The original passive hides them, but your job is to put them first. Hint: who did the action?<br>
+        <span class="note">Try starting with: <b>${d.subjects[0]}</b> …</span>`;
+      completed.delete(i);
+      updateScore();
+    } else {
+      fb.className = "feedback show bad";
+      statusEl.className = "drill-status bad";
+      statusEl.textContent = "Verb Off";
+      fb.innerHTML = `<span class="label">▸ Verb needs work</span>
+        Good subject, but the verb isn't quite right. Try using a simple active form like <b>${d.verbs[0]}</b>.<br>
+        <span class="note">Model: <em>${d.model}</em></span>`;
+      completed.delete(i);
+      updateScore();
+    }
+  }
+
+  function showModel(i) {
+    const d = drills[i];
+    const fb = document.getElementById(`fb-${i}`);
+    fb.className = "feedback show ok";
+    fb.innerHTML = `<span class="label">▸ Editor's model</span>
+      <div class="model-answer">${d.model}</div>
+      <span class="note">Notice: doer first, single strong verb, no "was … by".</span>`;
+  }
+
+  function resetStatus(i) {
+    const statusEl = document.getElementById(`status-${i}`);
+    statusEl.className = "drill-status";
+    statusEl.textContent = "Pending";
+    completed.delete(i);
+    updateScore();
+  }
+
+  function updateScore() {
+    const n = completed.size;
+    const total = drills.length;
+    document.getElementById("scoreText").textContent = `${n} / ${total}`;
+    document.getElementById("progressBar").style.width = `${(n/total)*100}%`;
+    const status = document.getElementById("statusText");
+    if (n === 0) status.textContent = "Awaiting first rewrite…";
+    else if (n < total/2) status.textContent = "Warming up the desk…";
+    else if (n < total) status.textContent = "Strong copy — keep going.";
+    else status.textContent = "★ Cleared. You're on air.";
+  }
+
+  // -------- FINAL ASSIGNMENT --------
+  function analyzeFinal() {
+    const raw = document.getElementById("finalScript").value;
+    const txt = normalize(raw);
+    const fb = document.getElementById("finalFeedback");
+
+    if (!txt || raw.trim().length < 30) {
+      fb.className = "feedback show bad";
+      fb.innerHTML = `<span class="label">▸ Too short</span>Write at least a few sentences of script before submitting.`;
+      return;
+    }
+
+    // Count passive markers
+    const passiveMarkers = [
+      "was reported", "were reported",
+      "was brought", "were brought",
+      "was rescued", "were rescued",
+      "has been confirmed", "have been confirmed",
+      "has been launched", "have been launched",
+      "is being examined", "are being examined",
+      "was caused", "were caused",
+      "by the authorities", "by inspectors", "by firefighters"
+    ];
+    const hits = passiveMarkers.filter(m => txt.includes(m));
+
+    // Sentence count
+    const sentences = raw.split(/[.!?]+/).map(s => s.trim()).filter(Boolean);
+    const avgLen = sentences.length ? sentences.reduce((a,s)=>a+s.split(/\s+/).length,0)/sentences.length : 0;
+
+    // Active subjects hinted
+    const activeSubjects = ["firefighters", "fire", "investigators", "inspectors", "authorities", "a fire", "the fire", "police"];
+    const subjectMatches = activeSubjects.filter(s => txt.includes(s)).length;
+
+    let score = 0;
+    if (hits.length === 0) score += 50;
+    else if (hits.length <= 2) score += 25;
+    if (avgLen > 0 && avgLen <= 18) score += 25;
+    else if (avgLen <= 24) score += 12;
+    if (subjectMatches >= 3) score += 25;
+    else if (subjectMatches >= 2) score += 12;
+
+    let verdict = "";
+    let cls = "ok";
+    if (score >= 80) {
+      verdict = "★ CLEARED FOR AIR";
+      cls = "ok";
+    } else if (score >= 50) {
+      verdict = "⚠ NEEDS A SECOND PASS";
+      cls = "bad";
+    } else {
+      verdict = "✗ REWRITE — TOO PASSIVE";
+      cls = "bad";
+    }
+
+    fb.className = `feedback show ${cls}`;
+    fb.style.background = "var(--paper)";
+    fb.style.color = "var(--ink)";
+    fb.innerHTML = `
+      <span class="label">▸ Editor's notes — ${verdict}</span>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:10px 0;">
+        <div><b>Passive constructions:</b> ${hits.length} ${hits.length===0?'✓':''}</div>
+        <div><b>Avg sentence length:</b> ${avgLen.toFixed(1)} words</div>
+        <div><b>Active subjects used:</b> ${subjectMatches}</div>
+        <div><b>Editor score:</b> ${score}/100</div>
+      </div>
+      ${hits.length ? `<div class="note"><b>Still passive:</b> ${hits.map(h=>`"${h}"`).join(", ")}. Replace with an active doer.</div>` : ''}
+      <details style="margin-top:12px;">
+        <summary style="cursor:pointer;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--red);">▸ View editor's model script</summary>
+        <div style="margin-top:12px;font-family:'Playfair Display',serif;font-style:italic;font-size:16px;line-height:1.55;background:var(--paper-2);padding:14px 16px;border-left:3px solid var(--red);">
+          ANCHOR (on cam): A fire tore through a textile factory in Mong Kok early this morning.
+          More than fifty firefighters fought the blaze for three hours before bringing it under control.
+          Crews rescued twelve workers from the upper floors.
+          Authorities have confirmed no casualties so far.
+          Inspectors are now examining the cause.
+        </div>
+        <div class="note" style="margin-top:8px;">Five short sentences. Every one starts with a doer. No "was … by" anywhere.</div>
+      </details>
+    `;
+  }
+
+  // -------- CLOCK --------
+  function tick() {
+    const now = new Date();
+    const t = now.toTimeString().slice(0,8);
+    document.getElementById("clock").textContent = t;
+  }
+  setInterval(tick, 1000); tick();
+  document.getElementById("footerDate").textContent =
+    new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }).toUpperCase();
+
+  updateScore();
+</script>
+</body>
+</html>
